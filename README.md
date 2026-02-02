@@ -1,46 +1,52 @@
-# FDDB Prometheus Exporter
+# fddb-exporter
 
-![pytest](https://github.com/benni1390/fddb-exporter/actions/workflows/pytest.yml/badge.svg) ![docker-publish](https://github.com/benni1390/fddb-exporter/actions/workflows/docker-publish.yml/badge.svg) ![docker-build](https://github.com/benni1390/fddb-exporter/actions/workflows/docker-build.yml/badge.svg) ![docker](https://github.com/benni1390/fddb-exporter/actions/workflows/docker.yml/badge.svg)
+Prometheus exporter for FDDB (daily nutrition diary data).
 
-Prometheus-Exporter für FDDB (Tagebuch‑Nährwertdaten).
+This repository contains the exporter application, unit tests and deployment artifacts (Helm chart).
 
-Image: `ghcr.io/benni1390/fddb-exporter`
+Quick start
 
-Kurz (Quick Start)
+- Copy environment template and fill values:
 
 ```bash
-cp .env.dist .env     # .env ausfüllen
-make build             # baut Image (docker compose build)
-docker compose up -d   # startet den Container
-# Test
-curl http://localhost:8000/metrics | grep '^fddb_'
+cp .env.dist .env
+# edit .env
 ```
 
-Wichtige Umgebungsvariablen (Kurz)
+- Run locally with Docker Compose:
 
-- `FDDB_USERNAME` – FDDB Login‑Email (required)
-- `FDDB_PASSWORD` – FDDB Passwort (required)
-- `EXPORTER_PORT` – Default: 8000
-- `SCRAPE_INTERVAL` – Default: 300
-- `FDDB_DATE_OFFSET` – 0 = heute, -1 = gestern
-- `DEBUG_OUTPUT_DIR` – optional: HTML‑Dumps für Debug
+```bash
+docker compose up --build
+```
 
-Build & Release
+Important environment variables
 
-- Lokales Build: `make build`
-- Push/Publish: über CI (nicht lokal). Setze im Repo Secrets: `GITHUB_TOKEN` (standard) oder `CR_PAT` für alternative PAT.
+- `FDDB_USERNAME` / `FDDB_PASSWORD` – FDDB account credentials
+- `EXPORTER_PORT` – HTTP port for Prometheus metrics endpoint
+- `DEBUG_OUTPUT_DIR` – optional: store HTML debug dumps
 
-Kubernetes
+CI / Releases
 
-Manifeste werden in einem separaten Repo verwaltet:
-`benni1390/fddb-exporter-deployment`
+- Images and Helm charts are built and published by CI. Do not commit credentials.
+- Configure repository secrets for publishing (e.g. `GITHUB_TOKEN` or `CR_PAT`).
+
+Running tests
+
+- Run unit tests locally via:
+
+```bash
+make test
+# or
+pytest -q
+```
+
+Project layout
+
+- `fddb_exporter/` – package source code
+- `exporter.py` – entry point used by Dockerfile
+- `fddb-exporter-deployment/` – Helm chart and deployment artifacts
+- `tests/` – unit tests
 
 License
 
-MIT
-
-Author & Maintainer
-
-- Benjamin Drews — Maintainer
-- GitHub: https://github.com/benni1390
-- Contact: via GitHub profile
+See `LICENSE` file.

@@ -27,6 +27,6 @@ credentials.yml
 *.swo
 
 # Separate deployment repository
-fddb-exporter-deployment/
+fddb-exporter-deployment
 
 .coverage

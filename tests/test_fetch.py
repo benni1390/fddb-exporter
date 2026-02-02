@@ -24,7 +24,7 @@ def make_session(login_ok=True, detail_href='/db/i18n/myday20/?lang=en'):
     session.post.return_value = login_resp
 
     # notepad page: contains a link to detail
-    notepad_html = f'<a href="{detail_href}">Detailansicht</a>'
+    notepad_html = f'<a href="{detail_href}">Detail view</a>'
     notepad_resp = DummyResponse(text=notepad_html, status_code=200, url='https://fddb.info/db/i18n/notepad/?lang=en')
     session.get.side_effect = [notepad_resp, DummyResponse(text='<div>myday content</div>', status_code=200, url='https://fddb.info/db/i18n/myday20/?lang=en')]
 
