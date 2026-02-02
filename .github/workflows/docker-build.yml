@@ -15,7 +15,16 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
+  hadolint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: Dockerfile
+
   build-and-push:
+    needs: hadolint
     runs-on: ubuntu-latest
     permissions:
       contents: read
