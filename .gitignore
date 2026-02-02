@@ -1,0 +1,32 @@
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+ENV/
+.env
+.venv
+*.log
+.DS_Store
+
+# Sensitive files - never commit!
+.env
+*.key
+*.pem
+credentials.yml
+
+# Local development files
+.local/
+.github/copilot-instructions.md
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Separate deployment repository
+fddb-exporter-deployment/
+
+.coverage

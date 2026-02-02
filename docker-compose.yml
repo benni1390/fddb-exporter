@@ -1,0 +1,16 @@
+services:
+  fddb-exporter:
+    image: fddb-exporter:latest
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./exporter.py:/app/exporter.py
+      - ./.local:/app/.local
+    environment:
+      - EXPORTER_PORT=8000
+      - SCRAPE_INTERVAL=300
+      - FDDB_DATE_OFFSET=0
+      - FDDB_USERNAME=${FDDB_USERNAME}
+      - FDDB_PASSWORD=${FDDB_PASSWORD}
+    restart: unless-stopped
