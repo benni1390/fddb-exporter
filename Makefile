@@ -2,7 +2,7 @@
 
 # Run with Docker Compose
 up:
-	docker compose up
+	docker compose up --build
 
 down:
 	docker compose down

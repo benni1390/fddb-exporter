@@ -61,6 +61,12 @@ def fetch_fddb_data(session=None, username=None, password=None, date_offset=None
     notepad_response.raise_for_status()
 
     soup = BeautifulSoup(notepad_response.text, 'html.parser')
+
+    # check for "no entries" message
+    page_text = notepad_response.text.lower()
+    if 'no entries for this period' in page_text or 'keine einträge' in page_text:
+        return '<html><body><table cellspacing="0" cellpadding="2"><tr><td>Energy:</td><td>0 kJ / 0 kcal</td></tr></table></body></html>'
+
     detail_links = soup.find_all('a', string=lambda text: text and 'detailansicht' in text.lower())
     if not detail_links:
         detail_links = soup.find_all('a', href=lambda href: href and 'myday20' in href)
