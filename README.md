@@ -26,7 +26,7 @@ helm upgrade --install fddb-exporter benni1390/fddb-exporter \
   --namespace monitoring --create-namespace \
   --set env.FDDB_USERNAME=your-username \
   --set env.FDDB_PASSWORD=your-password \
-  --set image.tag=0.1.0
+  --set image.tag=0.0.1
 ```
 
 See [Helm chart documentation](fddb-exporter-deployment/README.md) for more options.
@@ -35,14 +35,14 @@ See [Helm chart documentation](fddb-exporter-deployment/README.md) for more opti
 
 ```bash
 # Pull image
-docker pull ghcr.io/benni1390/fddb-exporter:0.1.0
+docker pull ghcr.io/benni1390/fddb-exporter:0.0.1
 
 # Run with environment variables
 docker run -d -p 8000:8000 \
   -e FDDB_USERNAME=your-username \
   -e FDDB_PASSWORD=your-password \
   -e SCRAPE_INTERVAL=3600 \
-  ghcr.io/benni1390/fddb-exporter:0.1.0
+  ghcr.io/benni1390/fddb-exporter:0.0.1
 ```
 
 ### Docker Compose
