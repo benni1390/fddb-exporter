@@ -74,3 +74,21 @@ def test_fetch_no_detail_link(mock_session_class, monkeypatch):
 
     with pytest.raises(Exception):
         fetch_fddb_data()
+
+
+@patch('exporter.requests.Session')
+def test_fetch_no_entries_for_period(mock_session_class, monkeypatch):
+    # notepad page with "no entries for this period" message
+    session = MagicMock()
+    notepad_resp = DummyResponse(text='<html><body>No entries for this period</body></html>', status_code=200)
+    session.post.return_value = DummyResponse(text='logged in', status_code=200, url='https://fddb.info/myfddb')
+    session.get.side_effect = [notepad_resp]
+    mock_session_class.return_value = session
+
+    monkeypatch.setenv('FDDB_USERNAME', 'user')
+    monkeypatch.setenv('FDDB_PASSWORD', 'pass')
+
+    html = fetch_fddb_data()
+    assert '0 kJ' in html
+    assert '0 kcal' in html
+
