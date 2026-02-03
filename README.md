@@ -25,10 +25,29 @@ Important environment variables
 - `EXPORTER_PORT` – HTTP port for Prometheus metrics endpoint
 - `DEBUG_OUTPUT_DIR` – optional: store HTML debug dumps
 
-CI / Releases
+## CI / Releases
 
-- Images and Helm charts are built and published by CI. Do not commit credentials.
-- Configure repository secrets for publishing (e.g. `GITHUB_TOKEN` or `CR_PAT`).
+### Creating a new release
+
+1. Update `VERSION` file with new version (e.g., `0.2.0`)
+2. Commit and push to main (or merge PR)
+3. Workflow automatically creates:
+   - Git tag `v0.2.0`
+   - GitHub release
+   - Docker image with tags: `v0.2.0`, `0.2`, `0`, `latest`
+
+### Using specific versions
+
+```bash
+# Docker
+docker pull ghcr.io/benni1390/fddb-exporter:0.1.0
+
+# Helm with specific image version
+helm upgrade --install fddb-exporter benni1390/fddb-exporter \
+  --set image.tag=0.1.0
+```
+
+Images and Helm charts are built and published by CI. Do not commit credentials.
 
 Running tests
 
