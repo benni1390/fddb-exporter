@@ -72,3 +72,10 @@ jobs:
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-docker:
+    needs: release
+    if: needs.release.result == 'success'
+    uses: ./.github/workflows/docker-build.yml
+    secrets: inherit
+
