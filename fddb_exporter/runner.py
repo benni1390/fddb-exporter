@@ -6,6 +6,7 @@ from prometheus_client import start_http_server
 from .fetcher import fetch_fddb_data
 from .parser import parse_fddb_data
 from .updater import update_metrics
+from .reference_values import set_reference_values
 
 # Configure logging to stdout (force unbuffered for K8s)
 logging.basicConfig(
@@ -21,6 +22,8 @@ logger.setLevel(logging.INFO)
 def run_loop(port=8000, scrape_interval=300, max_iterations=None):
     start_http_server(port)
     logger.info("HTTP metrics server started on port %s", port)
+    set_reference_values()
+    logger.info("Reference values initialized")
     iterations = 0
     while True:
         try:
