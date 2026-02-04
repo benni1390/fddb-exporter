@@ -36,3 +36,11 @@ calcium_mg = Gauge('fddb_calcium_mg', 'Calcium in milligrams')
 phosphorus_mg = Gauge('fddb_phosphorus_mg', 'Phosphorus in milligrams')
 sulfur_mg = Gauge('fddb_sulfur_mg', 'Sulfur in milligrams')
 iodine_mg = Gauge('fddb_iodine_mg', 'Iodine in milligrams')
+
+# Macronutrient distribution (percentage of total energy)
+fat_percentage = Gauge('fddb_fat_percentage', 'Fat as percentage of total energy')
+carbohydrates_percentage = Gauge('fddb_carbohydrates_percentage', 'Carbohydrates as percentage of total energy')
+protein_percentage = Gauge('fddb_protein_percentage', 'Protein as percentage of total energy')
+alcohol_percentage = Gauge('fddb_alcohol_percentage', 'Alcohol as percentage of total energy')
+
+
