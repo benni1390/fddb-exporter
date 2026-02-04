@@ -67,6 +67,7 @@ docker compose up -d
 | `EXPORTER_PORT` | HTTP port for metrics endpoint | `8000` |
 | `SCRAPE_INTERVAL` | Data fetch interval in seconds | `3600` |
 | `FDDB_DATE_OFFSET` | Days offset from today | `0` |
+| `FDDB_DAILY_CALORIES` | Daily calorie target for reference values | `2000` |
 | `DEBUG_OUTPUT_DIR` | Directory for HTML debug dumps | *(optional)* |
 
 ### Empty Diary Handling
@@ -119,7 +120,20 @@ Access metrics at `http://localhost:8000/metrics`
 
 ### Reference Values (D-A-CH Guidelines)
 
-Reference values based on D-A-CH recommendations (German, Austrian, Swiss nutrition societies) for adults:
+Reference values based on D-A-CH recommendations (German, Austrian, Swiss nutrition societies) for adults (based on 2000 kcal/day diet):
+
+#### Macronutrient Reference Values
+
+- `fddb_fat_reference_grams` - Reference: 67 g/day (30% of energy)
+- `fddb_carbohydrates_reference_grams` - Reference: 260 g/day (50% of energy)
+- `fddb_sugar_reference_grams` - Reference: 50 g/day max (WHO recommendation <10% energy)
+- `fddb_protein_reference_grams` - Reference: 57 g/day (0.8g per kg bodyweight)
+- `fddb_fiber_reference_grams` - Reference: 30 g/day minimum
+- `fddb_water_reference_liters` - Reference: 2.0 liters/day
+- `fddb_cholesterol_reference_mg` - Reference: 300 mg/day max
+- `fddb_alcohol_reference_grams` - Reference: 20 g/day max
+
+#### Vitamin Reference Values
 
 - `fddb_vitamin_c_reference_mg` - Reference: 100 mg/day
 - `fddb_vitamin_a_reference_mg` - Reference: 0.85 mg/day
@@ -129,6 +143,9 @@ Reference values based on D-A-CH recommendations (German, Austrian, Swiss nutrit
 - `fddb_vitamin_b2_reference_mg` - Reference: 1.3 mg/day
 - `fddb_vitamin_b6_reference_mg` - Reference: 1.4 mg/day
 - `fddb_vitamin_b12_reference_mg` - Reference: 0.004 mg/day (4 µg)
+
+#### Mineral Reference Values
+
 - `fddb_iron_reference_mg` - Reference: 12.5 mg/day
 - `fddb_zinc_reference_mg` - Reference: 9 mg/day
 - `fddb_magnesium_reference_mg` - Reference: 350 mg/day

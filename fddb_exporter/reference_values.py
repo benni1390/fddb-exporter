@@ -3,6 +3,16 @@ from prometheus_client import Gauge
 # D-A-CH reference values (German Nutrition Society)
 # Adult average (19-65 years, male/female average where applicable)
 
+# Macronutrient reference values
+fat_ref = Gauge('fddb_fat_reference_grams', 'Reference value for Fat in grams')
+carbohydrates_ref = Gauge('fddb_carbohydrates_reference_grams', 'Reference value for Carbohydrates in grams')
+sugar_ref = Gauge('fddb_sugar_reference_grams', 'Reference value for Sugar in grams')
+protein_ref = Gauge('fddb_protein_reference_grams', 'Reference value for Protein in grams')
+fiber_ref = Gauge('fddb_fiber_reference_grams', 'Reference value for Fiber in grams')
+water_ref = Gauge('fddb_water_reference_liters', 'Reference value for Water in liters')
+cholesterol_ref = Gauge('fddb_cholesterol_reference_mg', 'Reference value for Cholesterol in mg')
+alcohol_ref = Gauge('fddb_alcohol_reference_grams', 'Reference value for Alcohol in grams (max)')
+
 # Vitamin reference values (RDA - Recommended Daily Allowance)
 vitamin_c_ref = Gauge('fddb_vitamin_c_reference_mg', 'Reference value for Vitamin C in mg')
 vitamin_a_ref = Gauge('fddb_vitamin_a_reference_mg', 'Reference value for Vitamin A in mg')
@@ -24,12 +34,25 @@ iodine_ref = Gauge('fddb_iodine_reference_mg', 'Reference value for Iodine in mg
 selenium_ref = Gauge('fddb_selenium_reference_mg', 'Reference value for Selenium in mg')
 
 
-def set_reference_values():
+def set_reference_values(daily_calories=2000):
     """
     Set reference values based on D-A-CH guidelines (adult average).
     Source: German Nutrition Society (DGE), Austrian Nutrition Society (ÖGE),
     Swiss Society for Nutrition (SGE/SSN)
+
+    Args:
+        daily_calories: Daily calorie target (default: 2000 kcal)
     """
+    # Macronutrients (calculated based on daily_calories)
+    fat_ref.set(round(daily_calories * 0.30 / 9, 1))  # 30% of energy, 9 kcal per g fat
+    carbohydrates_ref.set(round(daily_calories * 0.50 / 4, 1))  # 50% of energy, 4 kcal per g carbs
+    sugar_ref.set(round(daily_calories * 0.10 / 4, 1))  # max 10% of energy
+    protein_ref.set(57)  # 0.8g per kg bodyweight, independent of calories
+    fiber_ref.set(30)  # 30g per day minimum, independent of calories
+    water_ref.set(2.0)  # 2.0 liters per day, independent of calories
+    cholesterol_ref.set(300)  # max 300mg per day, independent of calories
+    alcohol_ref.set(20)  # max 20g per day for men, independent of calories
+
     # Vitamins (mg/day)
     vitamin_c_ref.set(100)  # 95-110 mg
     vitamin_a_ref.set(0.85)  # 0.8-1.0 mg (retinol equivalent)

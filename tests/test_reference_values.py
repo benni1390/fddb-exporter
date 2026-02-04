@@ -2,6 +2,7 @@ import pytest
 from prometheus_client import REGISTRY
 from fddb_exporter.reference_values import (
     set_reference_values,
+    fat_ref, carbohydrates_ref, sugar_ref, protein_ref, fiber_ref, water_ref, cholesterol_ref, alcohol_ref,
     vitamin_c_ref, vitamin_a_ref, vitamin_d_ref, vitamin_e_ref,
     vitamin_b1_ref, vitamin_b2_ref, vitamin_b6_ref, vitamin_b12_ref,
     iron_ref, zinc_ref, magnesium_ref, calcium_ref,
@@ -11,6 +12,16 @@ from fddb_exporter.reference_values import (
 
 def test_reference_values_set():
     set_reference_values()
+
+    # Macronutrients (2000 kcal default)
+    assert fat_ref._value.get() == 66.7  # 2000 * 0.30 / 9
+    assert carbohydrates_ref._value.get() == 250.0  # 2000 * 0.50 / 4
+    assert sugar_ref._value.get() == 50.0  # 2000 * 0.10 / 4
+    assert protein_ref._value.get() == 57
+    assert fiber_ref._value.get() == 30
+    assert water_ref._value.get() == 2.0
+    assert cholesterol_ref._value.get() == 300
+    assert alcohol_ref._value.get() == 20
 
     # Vitamins
     assert vitamin_c_ref._value.get() == 100
@@ -37,6 +48,14 @@ def test_reference_values_registered():
     """Ensure reference metrics are registered with Prometheus"""
     metric_names = [m.name for m in REGISTRY.collect()]
 
+    assert 'fddb_fat_reference_grams' in metric_names
+    assert 'fddb_carbohydrates_reference_grams' in metric_names
+    assert 'fddb_sugar_reference_grams' in metric_names
+    assert 'fddb_protein_reference_grams' in metric_names
+    assert 'fddb_fiber_reference_grams' in metric_names
+    assert 'fddb_water_reference_liters' in metric_names
+    assert 'fddb_cholesterol_reference_mg' in metric_names
+    assert 'fddb_alcohol_reference_grams' in metric_names
     assert 'fddb_vitamin_c_reference_mg' in metric_names
     assert 'fddb_vitamin_a_reference_mg' in metric_names
     assert 'fddb_vitamin_d_reference_mg' in metric_names
@@ -53,3 +72,19 @@ def test_reference_values_registered():
     assert 'fddb_phosphorus_reference_mg' in metric_names
     assert 'fddb_iodine_reference_mg' in metric_names
     assert 'fddb_selenium_reference_mg' in metric_names
+
+
+def test_reference_values_custom_calories():
+    """Test reference values with custom daily calories"""
+    set_reference_values(daily_calories=2500)
+
+    # Macronutrients should scale with calories
+    assert fat_ref._value.get() == 83.3  # 2500 * 0.30 / 9
+    assert carbohydrates_ref._value.get() == 312.5  # 2500 * 0.50 / 4
+    assert sugar_ref._value.get() == 62.5  # 2500 * 0.10 / 4
+
+    # These should remain constant
+    assert protein_ref._value.get() == 57
+    assert fiber_ref._value.get() == 30
+    assert water_ref._value.get() == 2.0
+
