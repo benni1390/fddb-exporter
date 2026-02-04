@@ -34,14 +34,14 @@ iodine_ref = Gauge('fddb_iodine_reference_mg', 'Reference value for Iodine in mg
 selenium_ref = Gauge('fddb_selenium_reference_mg', 'Reference value for Selenium in mg')
 
 
-def set_reference_values(daily_calories=2000):
+def set_reference_values(daily_calories=2400):
     """
     Set reference values based on D-A-CH guidelines (adult average).
     Source: German Nutrition Society (DGE), Austrian Nutrition Society (ÖGE),
     Swiss Society for Nutrition (SGE/SSN)
 
     Args:
-        daily_calories: Daily calorie target (default: 2000 kcal)
+        daily_calories: Daily calorie target (default: 2400 kcal)
     """
     # Macronutrients (calculated based on daily_calories)
     fat_ref.set(round(daily_calories * 0.30 / 9, 1))  # 30% of energy, 9 kcal per g fat

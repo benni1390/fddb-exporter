@@ -22,7 +22,7 @@ logger.setLevel(logging.INFO)
 def run_loop(port=8000, scrape_interval=300, max_iterations=None):
     start_http_server(port)
     logger.info("HTTP metrics server started on port %s", port)
-    daily_calories = int(os.getenv('FDDB_DAILY_CALORIES', '2000'))
+    daily_calories = int(os.getenv('FDDB_DAILY_CALORIES', '2400'))
     set_reference_values(daily_calories)
     logger.info("Reference values initialized (daily_calories=%s)", daily_calories)
     iterations = 0

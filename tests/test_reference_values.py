@@ -13,10 +13,10 @@ from fddb_exporter.reference_values import (
 def test_reference_values_set():
     set_reference_values()
 
-    # Macronutrients (2000 kcal default)
-    assert fat_ref._value.get() == 66.7  # 2000 * 0.30 / 9
-    assert carbohydrates_ref._value.get() == 250.0  # 2000 * 0.50 / 4
-    assert sugar_ref._value.get() == 50.0  # 2000 * 0.10 / 4
+    # Macronutrients (2400 kcal default)
+    assert fat_ref._value.get() == 80.0  # 2400 * 0.30 / 9
+    assert carbohydrates_ref._value.get() == 300.0  # 2400 * 0.50 / 4
+    assert sugar_ref._value.get() == 60.0  # 2400 * 0.10 / 4
     assert protein_ref._value.get() == 57
     assert fiber_ref._value.get() == 30
     assert water_ref._value.get() == 2.0

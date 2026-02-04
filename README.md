@@ -67,7 +67,7 @@ docker compose up -d
 | `EXPORTER_PORT` | HTTP port for metrics endpoint | `8000` |
 | `SCRAPE_INTERVAL` | Data fetch interval in seconds | `3600` |
 | `FDDB_DATE_OFFSET` | Days offset from today | `0` |
-| `FDDB_DAILY_CALORIES` | Daily calorie target for reference values | `2000` |
+| `FDDB_DAILY_CALORIES` | Daily calorie target for reference values | `2400` |
 | `DEBUG_OUTPUT_DIR` | Directory for HTML debug dumps | *(optional)* |
 
 ### Empty Diary Handling
@@ -120,7 +120,7 @@ Access metrics at `http://localhost:8000/metrics`
 
 ### Reference Values (D-A-CH Guidelines)
 
-Reference values based on D-A-CH recommendations (German, Austrian, Swiss nutrition societies) for adults (based on 2000 kcal/day diet):
+Reference values based on D-A-CH recommendations (German, Austrian, Swiss nutrition societies) for adults (based on 2400 kcal/day diet):
 
 #### Macronutrient Reference Values
 
