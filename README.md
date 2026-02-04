@@ -1,5 +1,9 @@
 # fddb-exporter
 
+[![Tests](https://github.com/benni1390/fddb-exporter/actions/workflows/pytest.yml/badge.svg)](https://github.com/benni1390/fddb-exporter/actions/workflows/pytest.yml)
+[![Docker Build](https://github.com/benni1390/fddb-exporter/actions/workflows/docker-build.yml/badge.svg)](https://github.com/benni1390/fddb-exporter/actions/workflows/docker-build.yml)
+[![Release](https://github.com/benni1390/fddb-exporter/actions/workflows/release.yml/badge.svg)](https://github.com/benni1390/fddb-exporter/actions/workflows/release.yml)
+
 Prometheus exporter for [FDDB](https://fddb.info) (daily nutrition diary data).
 
 Exports your daily nutrition data from FDDB as Prometheus metrics for monitoring and visualization in Grafana.
