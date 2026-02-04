@@ -34,7 +34,9 @@ iodine_ref = Gauge('fddb_iodine_reference_mg', 'Reference value for Iodine in mg
 selenium_ref = Gauge('fddb_selenium_reference_mg', 'Reference value for Selenium in mg')
 
 
-def set_reference_values(daily_calories=2400):
+def set_reference_values(daily_calories=2400, bodyweight_kg=90,
+                         fat_g_per_kg=1.0, carbs_g_per_kg=4.0,
+                         protein_g_per_kg=2.0, alcohol_g_per_kg=0.0):
     """
     Set reference values based on D-A-CH guidelines (adult average).
     Source: German Nutrition Society (DGE), Austrian Nutrition Society (ÖGE),
@@ -42,23 +44,28 @@ def set_reference_values(daily_calories=2400):
 
     Args:
         daily_calories: Daily calorie target (default: 2400 kcal)
+        bodyweight_kg: Body weight in kg (default: 90 kg)
+        fat_g_per_kg: Fat target in g per kg bodyweight (default: 1.0)
+        carbs_g_per_kg: Carbs target in g per kg bodyweight (default: 4.0)
+        protein_g_per_kg: Protein target in g per kg bodyweight (default: 2.0)
+        alcohol_g_per_kg: Alcohol max in g per kg bodyweight (default: 0.0)
 
-    Note: Values scale with energy needs (calories), using 2400 kcal as baseline.
+    Note: Vitamins and minerals scale with energy needs (calories), using 2400 kcal as baseline.
     Reference baseline values are from D-A-CH for adults (19-65 years).
     """
     # Base reference at 2400 kcal
     BASE_CALORIES = 2400
     scale_factor = daily_calories / BASE_CALORIES
 
-    # Macronutrients (calculated based on daily_calories)
-    fat_ref.set(round(daily_calories * 0.30 / 9, 1))  # 30% of energy, 9 kcal per g fat
-    carbohydrates_ref.set(round(daily_calories * 0.50 / 4, 1))  # 50% of energy, 4 kcal per g carbs
+    # Macronutrients (calculated based on bodyweight and daily_calories)
+    fat_ref.set(round(fat_g_per_kg * bodyweight_kg, 1))
+    carbohydrates_ref.set(round(carbs_g_per_kg * bodyweight_kg, 1))
     sugar_ref.set(round(daily_calories * 0.10 / 4, 1))  # max 10% of energy
-    protein_ref.set(round(57 * scale_factor, 1))  # 0.8g per kg bodyweight, scales with energy
+    protein_ref.set(round(protein_g_per_kg * bodyweight_kg, 1))
     fiber_ref.set(round(30 * scale_factor, 1))  # scales with energy intake
     water_ref.set(round(2.0 * scale_factor, 1))  # scales with energy
     cholesterol_ref.set(300)  # max 300mg per day, independent of calories
-    alcohol_ref.set(20)  # max 20g per day for men, independent of calories
+    alcohol_ref.set(round(alcohol_g_per_kg * bodyweight_kg, 1) if alcohol_g_per_kg > 0 else 20)  # default 20g if not configured
 
     # Vitamins (mg/day) - scale with energy needs
     vitamin_c_ref.set(round(100 * scale_factor, 3))  # 95-110 mg at 2400 kcal

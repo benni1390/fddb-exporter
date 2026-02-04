@@ -68,6 +68,11 @@ docker compose up -d
 | `SCRAPE_INTERVAL` | Data fetch interval in seconds | `3600` |
 | `FDDB_DATE_OFFSET` | Days offset from today | `0` |
 | `FDDB_DAILY_CALORIES` | Daily calorie target for reference values | `2400` |
+| `FDDB_BODYWEIGHT_KG` | Body weight in kg for macro calculations | `90` |
+| `FDDB_FAT_G_PER_KG` | Target fat in g per kg bodyweight | `1.0` |
+| `FDDB_CARBS_G_PER_KG` | Target carbs in g per kg bodyweight | `4.0` |
+| `FDDB_PROTEIN_G_PER_KG` | Target protein in g per kg bodyweight | `2.0` |
+| `FDDB_ALCOHOL_G_PER_KG` | Max alcohol in g per kg bodyweight | `0.0` |
 | `DEBUG_OUTPUT_DIR` | Directory for HTML debug dumps | *(optional)* |
 
 ### Empty Diary Handling
@@ -118,20 +123,31 @@ Access metrics at `http://localhost:8000/metrics`
 - `fddb_sulfur_mg` - Sulfur in milligrams
 - `fddb_iodine_mg` - Iodine in milligrams
 
+### Macronutrient Distribution Metrics
+
+Percentage of total energy from each macronutrient:
+
+- `fddb_fat_percentage` - Fat as percentage of total energy
+- `fddb_carbohydrates_percentage` - Carbohydrates as percentage of total energy
+- `fddb_protein_percentage` - Protein as percentage of total energy
+- `fddb_alcohol_percentage` - Alcohol as percentage of total energy
+
 ### Reference Values (D-A-CH Guidelines)
 
-Reference values based on D-A-CH recommendations (German, Austrian, Swiss nutrition societies) for adults (based on 2400 kcal/day diet):
+Reference values based on D-A-CH recommendations (German, Austrian, Swiss nutrition societies) for adults (based on 2400 kcal/day, 90kg bodyweight):
 
 #### Macronutrient Reference Values
 
-- `fddb_fat_reference_grams` - Reference: 67 g/day (30% of energy)
-- `fddb_carbohydrates_reference_grams` - Reference: 260 g/day (50% of energy)
-- `fddb_sugar_reference_grams` - Reference: 50 g/day max (WHO recommendation <10% energy)
-- `fddb_protein_reference_grams` - Reference: 57 g/day (0.8g per kg bodyweight)
-- `fddb_fiber_reference_grams` - Reference: 30 g/day minimum
-- `fddb_water_reference_liters` - Reference: 2.0 liters/day
-- `fddb_cholesterol_reference_mg` - Reference: 300 mg/day max
-- `fddb_alcohol_reference_grams` - Reference: 20 g/day max
+Configurable via environment variables (g per kg bodyweight):
+
+- `fddb_fat_reference_grams` - Default: 90g (1.0 g/kg × 90kg, configurable via `FDDB_FAT_G_PER_KG`)
+- `fddb_carbohydrates_reference_grams` - Default: 360g (4.0 g/kg × 90kg, configurable via `FDDB_CARBS_G_PER_KG`)
+- `fddb_sugar_reference_grams` - Max 60g/day (10% of 2400 kcal)
+- `fddb_protein_reference_grams` - Default: 180g (2.0 g/kg × 90kg, configurable via `FDDB_PROTEIN_G_PER_KG`)
+- `fddb_fiber_reference_grams` - 30g/day minimum (scales with calories)
+- `fddb_water_reference_liters` - 2.0 liters/day (scales with calories)
+- `fddb_cholesterol_reference_mg` - Max 300mg/day
+- `fddb_alcohol_reference_grams` - Default: 20g/day max (configurable via `FDDB_ALCOHOL_G_PER_KG`)
 
 #### Vitamin Reference Values
 

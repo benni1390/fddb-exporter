@@ -22,9 +22,18 @@ logger.setLevel(logging.INFO)
 def run_loop(port=8000, scrape_interval=300, max_iterations=None):
     start_http_server(port)
     logger.info("HTTP metrics server started on port %s", port)
+
     daily_calories = int(os.getenv('FDDB_DAILY_CALORIES', '2400'))
-    set_reference_values(daily_calories)
-    logger.info("Reference values initialized (daily_calories=%s)", daily_calories)
+    bodyweight_kg = float(os.getenv('FDDB_BODYWEIGHT_KG', '90'))
+    fat_g_per_kg = float(os.getenv('FDDB_FAT_G_PER_KG', '1.0'))
+    carbs_g_per_kg = float(os.getenv('FDDB_CARBS_G_PER_KG', '4.0'))
+    protein_g_per_kg = float(os.getenv('FDDB_PROTEIN_G_PER_KG', '2.0'))
+    alcohol_g_per_kg = float(os.getenv('FDDB_ALCOHOL_G_PER_KG', '0.0'))
+
+    set_reference_values(daily_calories, bodyweight_kg, fat_g_per_kg,
+                        carbs_g_per_kg, protein_g_per_kg, alcohol_g_per_kg)
+    logger.info("Reference values initialized (calories=%s, bodyweight=%skg, fat=%sg/kg, carbs=%sg/kg, protein=%sg/kg)",
+                daily_calories, bodyweight_kg, fat_g_per_kg, carbs_g_per_kg, protein_g_per_kg)
     iterations = 0
     while True:
         try:

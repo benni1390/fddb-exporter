@@ -13,15 +13,15 @@ from fddb_exporter.reference_values import (
 def test_reference_values_set():
     set_reference_values()
 
-    # Macronutrients (2400 kcal default)
-    assert fat_ref._value.get() == 80.0  # 2400 * 0.30 / 9
-    assert carbohydrates_ref._value.get() == 300.0  # 2400 * 0.50 / 4
+    # Macronutrients (2400 kcal default, 90kg bodyweight)
+    assert fat_ref._value.get() == 90.0  # 1.0 g/kg * 90kg
+    assert carbohydrates_ref._value.get() == 360.0  # 4.0 g/kg * 90kg
     assert sugar_ref._value.get() == 60.0  # 2400 * 0.10 / 4
-    assert protein_ref._value.get() == 57.0
+    assert protein_ref._value.get() == 180.0  # 2.0 g/kg * 90kg
     assert fiber_ref._value.get() == 30.0
     assert water_ref._value.get() == 2.0
     assert cholesterol_ref._value.get() == 300
-    assert alcohol_ref._value.get() == 20
+    assert alcohol_ref._value.get() == 20  # default when 0 g/kg
 
     # Vitamins (at 2400 kcal baseline, scale_factor = 1.0)
     assert vitamin_c_ref._value.get() == 100.0
@@ -75,22 +75,24 @@ def test_reference_values_registered():
 
 
 def test_reference_values_custom_calories():
-    """Test reference values with custom daily calories"""
-    set_reference_values(daily_calories=2500)
+    """Test reference values with custom daily calories and bodyweight"""
+    set_reference_values(daily_calories=3000, bodyweight_kg=80,
+                        fat_g_per_kg=1.2, carbs_g_per_kg=5.0,
+                        protein_g_per_kg=2.5, alcohol_g_per_kg=0.1)
 
-    scale_factor = 2500 / 2400  # ~1.0417
+    scale_factor = 3000 / 2400  # 1.25
 
-    # Macronutrients should scale with calories
-    assert fat_ref._value.get() == 83.3  # 2500 * 0.30 / 9
-    assert carbohydrates_ref._value.get() == 312.5  # 2500 * 0.50 / 4
-    assert sugar_ref._value.get() == 62.5  # 2500 * 0.10 / 4
-    assert protein_ref._value.get() == 59.4  # 57 * 1.0417
-    assert fiber_ref._value.get() == 31.3  # 30 * 1.0417
-    assert water_ref._value.get() == 2.1  # 2.0 * 1.0417
+    # Macronutrients should use bodyweight-based calculation
+    assert fat_ref._value.get() == 96.0  # 1.2 * 80
+    assert carbohydrates_ref._value.get() == 400.0  # 5.0 * 80
+    assert sugar_ref._value.get() == 75.0  # 3000 * 0.10 / 4
+    assert protein_ref._value.get() == 200.0  # 2.5 * 80
+    assert fiber_ref._value.get() == 37.5  # 30 * 1.25
+    assert water_ref._value.get() == 2.5  # 2.0 * 1.25
+    assert alcohol_ref._value.get() == 8.0  # 0.1 * 80
 
     # These should remain constant
     assert cholesterol_ref._value.get() == 300
-    assert alcohol_ref._value.get() == 20
 
     # Vitamins should scale
     assert vitamin_c_ref._value.get() == round(100 * scale_factor, 3)
