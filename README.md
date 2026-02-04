@@ -29,7 +29,7 @@ helm upgrade --install fddb-exporter benni1390/fddb-exporter \
   --set image.tag=0.0.1
 ```
 
-See [Helm chart documentation](fddb-exporter-deployment/README.md) for more options.
+See [Helm chart documentation](https://github.com/benni1390/fddb-exporter-deployment) for more options.
 
 ### Docker
 
@@ -68,6 +68,10 @@ docker compose up -d
 | `SCRAPE_INTERVAL` | Data fetch interval in seconds | `3600` |
 | `FDDB_DATE_OFFSET` | Days offset from today | `0` |
 | `DEBUG_OUTPUT_DIR` | Directory for HTML debug dumps | *(optional)* |
+
+### Empty Diary Handling
+
+If no entries are tracked for the selected day, the exporter returns zero values for all metrics instead of failing. This allows continuous monitoring even on days without data.
 
 ## Metrics
 
