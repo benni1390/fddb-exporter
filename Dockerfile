@@ -8,7 +8,7 @@ ENV PATH="/opt/venv/bin:$PATH"
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-FROM gcr.io/distroless/python3-debian12@sha256:62214ec8dc220b42d244b471c6da1fe8017fdfeb361c8cf8d2ce254cd39def0c
+FROM gcr.io/distroless/python3-debian12:nonroot
 
 COPY --from=builder /opt/venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"

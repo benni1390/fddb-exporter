@@ -89,7 +89,15 @@ def fetch_fddb_data(session=None, username=None, password=None, date_offset=None
             href = detail_links[0].get('href')
             diary_url = f"https://fddb.info/{href.lstrip('/')}" if not href.startswith('http') else href
     else:
-        raise Exception('Could not find detail view link')
+        if debug_dir:
+            try:
+                os.makedirs(debug_dir, exist_ok=True)
+                debug_file = f"{debug_dir}/fddb_notepad_nodetail_{datetime.now().strftime('%Y%m%d_%H%M%S')}.html"
+                with open(debug_file, 'w', encoding='utf-8') as f:
+                    f.write(notepad_response.text)
+            except Exception:
+                pass
+        return notepad_response.text
 
     response = sess.get(diary_url, timeout=10)
     response.raise_for_status()

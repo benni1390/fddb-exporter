@@ -23,6 +23,14 @@ def run_loop(port=8000, scrape_interval=300, max_iterations=None):
     start_http_server(port)
     logger.info("HTTP metrics server started on port %s", port)
 
+    # Validate required env variables
+    username = os.getenv('FDDB_USERNAME')
+    password = os.getenv('FDDB_PASSWORD')
+
+    if not username or not password:
+        logger.error("FDDB_USERNAME and FDDB_PASSWORD are required")
+        raise ValueError("FDDB_USERNAME and FDDB_PASSWORD are required")
+
     daily_calories = int(os.getenv('FDDB_DAILY_CALORIES', '2400'))
     bodyweight_kg = float(os.getenv('FDDB_BODYWEIGHT_KG', '90'))
     fat_g_per_kg = float(os.getenv('FDDB_FAT_G_PER_KG', '1.0'))
@@ -37,16 +45,17 @@ def run_loop(port=8000, scrape_interval=300, max_iterations=None):
     iterations = 0
     while True:
         try:
-            logger.debug("Starting scrape iteration %s", iterations + 1)
+            iterations += 1
+            logger.debug("Starting scrape iteration %s", iterations)
             html_content = fetch_fddb_data(username=os.getenv('FDDB_USERNAME'), password=os.getenv('FDDB_PASSWORD'), date_offset=int(os.getenv('FDDB_DATE_OFFSET', '0')), skip_login_errors=os.getenv('FDDB_SKIP_LOGIN_ERRORS','false').lower()=='true', debug_dir=os.getenv('DEBUG_OUTPUT_DIR'))
             data = parse_fddb_data(html_content)
             update_metrics(data)
-            logger.debug("Completed scrape iteration %s", iterations + 1)
-        except Exception:
-            logger.exception("Error during scrape iteration %s", iterations + 1)
+            logger.info("Scrape iteration %s successful", iterations)
+        except Exception as e:
+            logger.error("Error during scrape iteration %s: %s", iterations, str(e))
+            logger.debug("Full traceback:", exc_info=True)
             # keep previous metrics
 
-        iterations += 1
         if max_iterations is not None and iterations >= max_iterations:
             logger.info("Max iterations reached (%s), exiting run loop", max_iterations)
             break

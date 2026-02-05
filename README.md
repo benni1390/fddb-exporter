@@ -79,9 +79,7 @@ docker compose up -d
 | `FDDB_ALCOHOL_G_PER_KG` | Max alcohol in g per kg bodyweight | `0.0` |
 | `DEBUG_OUTPUT_DIR` | Directory for HTML debug dumps | *(optional)* |
 
-### Empty Diary Handling
-
-If no entries are tracked for the selected day, the exporter returns zero values for all metrics instead of failing. This allows continuous monitoring even on days without data.
+**Note**: `FDDB_USERNAME` and `FDDB_PASSWORD` are required. The exporter will exit with an error if they are not set.
 
 ## Metrics
 

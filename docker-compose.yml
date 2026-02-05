@@ -1,6 +1,7 @@
 services:
   fddb-exporter:
-    image: fddb-exporter:latest
+    image: fddb-exporter
+    #image: ghcr.io/benni1390/fddb-exporter:0.0.4
     build: .
     ports:
       - "8000:8000"
