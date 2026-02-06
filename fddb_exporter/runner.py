@@ -23,6 +23,14 @@ def run_loop(port=8000, scrape_interval=300, max_iterations=None):
     start_http_server(port)
     logger.info("HTTP metrics server started on port %s", port)
 
+    # Validate required env variables
+    username = os.getenv('FDDB_USERNAME')
+    password = os.getenv('FDDB_PASSWORD')
+
+    if not username or not password:
+        logger.error("FDDB_USERNAME and FDDB_PASSWORD are required")
+        raise ValueError("FDDB_USERNAME and FDDB_PASSWORD are required")
+
     daily_calories = int(os.getenv('FDDB_DAILY_CALORIES', '2400'))
     bodyweight_kg = float(os.getenv('FDDB_BODYWEIGHT_KG', '90'))
     fat_g_per_kg = float(os.getenv('FDDB_FAT_G_PER_KG', '1.0'))
