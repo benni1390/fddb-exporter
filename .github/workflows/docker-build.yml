@@ -66,8 +66,7 @@ jobs:
           type=semver,pattern={{version}}
           type=semver,pattern={{major}}.{{minor}}
           type=semver,pattern={{major}}
-          type=sha
-          type=semver,pattern=latest
+          type=raw,value=latest,enable={{is_default_branch}}
 
     - name: Build and push Docker image
       uses: docker/build-push-action@v6
@@ -76,6 +75,15 @@ jobs:
         push: ${{ github.event_name != 'pull_request' }}
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
+
+    - name: Update Docker Hub description
+      if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/v')
+      uses: peter-evans/dockerhub-description@v4
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+        repository: benni1390/fddb-exporter
+        readme-filepath: ./README.md
 
     - name: Image digest
       run: echo ${{ steps.meta.outputs.digest }}
