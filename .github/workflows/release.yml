@@ -15,6 +15,8 @@ permissions:
 jobs:
   release:
     runs-on: ubuntu-latest
+    outputs:
+      tag_created: ${{ steps.create_tag.outputs.created }}
 
     steps:
       - name: Checkout
@@ -41,40 +43,14 @@ jobs:
           fi
 
       - name: Create git tag
+        id: create_tag
         if: steps.check_tag.outputs.exists == 'false'
         run: |
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
           git tag -a "v${{ steps.version.outputs.version }}" -m "Release v${{ steps.version.outputs.version }}"
           git push origin "v${{ steps.version.outputs.version }}"
-
-      - name: Log in to GitHub Container Registry
-        if: steps.check_tag.outputs.exists == 'false'
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Extract metadata (tags, labels) for Docker
-        if: steps.check_tag.outputs.exists == 'false'
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ghcr.io/${{ github.repository }}
-          tags: |
-            type=semver,pattern={{version}},value=v${{ steps.version.outputs.version }}
-            type=semver,pattern={{major}}.{{minor}},value=v${{ steps.version.outputs.version }}
-            type=semver,pattern={{major}},value=v${{ steps.version.outputs.version }}
-
-      - name: Build and push Docker image
-        if: steps.check_tag.outputs.exists == 'false'
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          echo "created=true" >> $GITHUB_OUTPUT
 
       - name: Create GitHub Release
         if: steps.check_tag.outputs.exists == 'false'
@@ -85,9 +61,15 @@ jobs:
           body: |
             ## FDDB Exporter v${{ steps.version.outputs.version }}
             
-            ### Docker Image
+            ### Docker Images
             ```bash
+            # Docker Hub
+            docker pull benni1390/fddb-exporter:${{ steps.version.outputs.version }}
+            docker pull benni1390/fddb-exporter:latest
+            
+            # GitHub Container Registry
             docker pull ghcr.io/${{ github.repository }}:${{ steps.version.outputs.version }}
+            docker pull ghcr.io/${{ github.repository }}:latest
             ```
             
             ### Helm Chart
@@ -98,6 +80,13 @@ jobs:
             ```
           draft: false
           prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+  # Trigger docker build workflow for the new tag
+  build:
+    needs: release
+    if: needs.release.outputs.tag_created == 'true'
+    permissions:
+      contents: read
+      packages: write
+    uses: ./.github/workflows/docker-build.yml
+    secrets: inherit
