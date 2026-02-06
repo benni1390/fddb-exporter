@@ -72,8 +72,8 @@ def test_fetch_no_detail_link(mock_session_class, monkeypatch):
     monkeypatch.setenv('FDDB_USERNAME', 'user')
     monkeypatch.setenv('FDDB_PASSWORD', 'pass')
 
-    with pytest.raises(Exception):
-        fetch_fddb_data()
+    html = fetch_fddb_data()
+    assert 'No links' in html
 
 
 @patch('exporter.requests.Session')

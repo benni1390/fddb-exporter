@@ -3,6 +3,11 @@
 [![Tests](https://github.com/benni1390/fddb-exporter/actions/workflows/pytest.yml/badge.svg)](https://github.com/benni1390/fddb-exporter/actions/workflows/pytest.yml)
 [![Docker Build](https://github.com/benni1390/fddb-exporter/actions/workflows/docker-build.yml/badge.svg)](https://github.com/benni1390/fddb-exporter/actions/workflows/docker-build.yml)
 [![Release](https://github.com/benni1390/fddb-exporter/actions/workflows/release.yml/badge.svg)](https://github.com/benni1390/fddb-exporter/actions/workflows/release.yml)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/benni1390/fddb-exporter)](https://github.com/benni1390/fddb-exporter/releases)
+[![GitHub last commit](https://img.shields.io/github/last-commit/benni1390/fddb-exporter)](https://github.com/benni1390/fddb-exporter/commits/main)
+[![License](https://img.shields.io/github/license/benni1390/fddb-exporter)](LICENSE)
+[![Docker Image Size](https://img.shields.io/docker/image-size/benni1390/fddb-exporter/latest)](https://hub.docker.com/r/benni1390/fddb-exporter)
+[![Python Version](https://img.shields.io/badge/python-3.11%2B-blue)](https://www.python.org/downloads/)
 
 Prometheus exporter for [FDDB](https://fddb.info) (daily nutrition diary data).
 
@@ -38,7 +43,10 @@ See [Helm chart documentation](https://github.com/benni1390/fddb-exporter-deploy
 ### Docker
 
 ```bash
-# Pull image
+# Pull from Docker Hub (recommended)
+docker pull benni1390/fddb-exporter:0.0.1
+
+# Or from GitHub Container Registry
 docker pull ghcr.io/benni1390/fddb-exporter:0.0.1
 
 # Run with environment variables
@@ -46,7 +54,7 @@ docker run -d -p 8000:8000 \
   -e FDDB_USERNAME=your-username \
   -e FDDB_PASSWORD=your-password \
   -e SCRAPE_INTERVAL=3600 \
-  ghcr.io/benni1390/fddb-exporter:0.0.1
+  benni1390/fddb-exporter:0.0.1
 ```
 
 ### Docker Compose
@@ -79,9 +87,7 @@ docker compose up -d
 | `FDDB_ALCOHOL_G_PER_KG` | Max alcohol in g per kg bodyweight | `0.0` |
 | `DEBUG_OUTPUT_DIR` | Directory for HTML debug dumps | *(optional)* |
 
-### Empty Diary Handling
-
-If no entries are tracked for the selected day, the exporter returns zero values for all metrics instead of failing. This allows continuous monitoring even on days without data.
+**Note**: `FDDB_USERNAME` and `FDDB_PASSWORD` are required. The exporter will exit with an error if they are not set.
 
 ## Metrics
 
@@ -250,7 +256,9 @@ pytest -v
 - **Docker Build**: Builds and pushes images on tags
 - **Release**: Automated via VERSION file changes
 
-Images are published to: `ghcr.io/benni1390/fddb-exporter`
+Images are published to:
+- **Docker Hub**: `benni1390/fddb-exporter` (recommended)
+- **GitHub Container Registry**: `ghcr.io/benni1390/fddb-exporter`
 
 ### Contributing
 
