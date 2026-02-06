@@ -23,8 +23,9 @@ def test_run_loop_single_iteration(monkeypatch):
 def test_run_loop_raises_error_missing_credentials(monkeypatch):
     monkeypatch.setattr('fddb_exporter.runner.start_http_server', lambda port: None)
 
-    monkeypatch.delenv('FDDB_USERNAME', raising=False)
-    monkeypatch.delenv('FDDB_PASSWORD', raising=False)
+    # Set to empty string to ensure they are falsy
+    monkeypatch.setenv('FDDB_USERNAME', '')
+    monkeypatch.setenv('FDDB_PASSWORD', '')
 
     import pytest
     with pytest.raises(ValueError, match="FDDB_USERNAME and FDDB_PASSWORD are required"):
