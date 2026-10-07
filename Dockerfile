@@ -20,7 +20,7 @@ COPY --chown=nonroot:nonroot exporter.py /app/
 
 WORKDIR /app
 EXPOSE 8000
-USER nonroot
+USER 65532
 
 ENTRYPOINT ["/usr/bin/python3.11"]
 CMD ["/app/exporter.py"]
